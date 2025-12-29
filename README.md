@@ -1,17 +1,51 @@
-# React + Vite
+# Quantify Pro - Inventory Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive inventory management system built with **React**, **Supabase**, and **Tailwind CSS**. Track products, stock levels, and total inventory value with an intuitive dashboard and dark mode support.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+- **Add, Edit, Delete Products**  
+  Quickly manage your inventory with an easy-to-use form.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Real-time Inventory List**  
+  Products are displayed in a responsive table for desktop and card view for mobile.
 
-## Expanding the ESLint configuration
+- **Stock Alerts**  
+  Low stock items are highlighted to help you keep track of inventory.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# Inventory-Management-System-
+- **Total Inventory Value**  
+  Automatically calculates the total value of all products.
+
+- **Dark Mode**  
+  Toggle between light and dark themes.
+
+- **Notifications**  
+  Uses **SweetAlert2** for success, warning, and toast notifications.
+
+---
+
+## Demo
+
+**[Live in Vercel](https://quantify-gim4gv68p-abdul-muqsit-s-projects.vercel.app/)**
+
+---
+
+## Tech Stack
+
+- **React** with hooks (`useState`, `useEffect`)
+- **Tailwind CSS** for styling
+- **Lucide Icons** for UI icons
+- **Supabase** for backend and database
+- **SweetAlert2** for notifications
+
+---
+
+## Installation
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/yourusername/quantify-pro.git
+cd quantify-pro
