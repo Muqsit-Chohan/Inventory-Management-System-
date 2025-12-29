@@ -28,7 +28,7 @@ A modern, responsive inventory management system built with **React**, **Supabas
 
 ## Demo
 
-**[Live in Vercel](https://quantify-gim4gv68p-abdul-muqsit-s-projects.vercel.app/)**
+**[Live in Vercel](https://quantify-pro.vercel.app/)**
 
 ---
 
