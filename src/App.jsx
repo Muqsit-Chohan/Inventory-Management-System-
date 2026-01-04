@@ -13,14 +13,13 @@ const InventorySystem = () => {
   const [form, setForm] = useState({ name: '', price: '', qty: '' });
   const [editingId, setEditingId] = useState(null);
 
-  // Custom Toast for small updates
   const Toast = Swal.mixin({
     toast: true,
     position: 'top-end',
     showConfirmButton: false,
     timer: 2000,
     background: '#1e293b',
-    color:'#f1f5f9',
+    color: '#f1f5f9',
   });
 
   useEffect(() => {
@@ -44,6 +43,13 @@ const InventorySystem = () => {
 
   useEffect(() => { fetchInventory(); }, []);
 
+  // function for editing (Mobile & Desktop)
+  const startEdit = (item) => {
+    setEditingId(item.id);
+    setForm({ name: item.name, price: item.price, qty: item.qty });
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Form pe scroll karega
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const itemData = { name: form.name, price: parseFloat(form.price), qty: parseInt(form.qty) };
@@ -54,7 +60,6 @@ const InventorySystem = () => {
     } else {
       const { error } = await supabase.from('MyinventoryDB').insert([itemData]);
       if (!error) {
-        // Colored SweetAlert for "Saved"
         Swal.fire({
           title: 'Saved!',
           text: 'Product added to stock.',
@@ -100,9 +105,7 @@ const InventorySystem = () => {
         {/* Header */}
         <header className="flex flex-row justify-between items-center mb-8">
           <div className="flex items-center gap-3">
-            <div className="bg-indigo-600 p-2 rounded-lg text-white shadow-lg shadow-indigo-200 dark:shadow-none">
-              <Package size={24} />
-            </div>
+            <div className="bg-indigo-600 p-2 rounded-lg text-white"><Package size={24} /></div>
             <h1 className="text-xl md:text-2xl font-bold tracking-tight">Quantify <span className="text-indigo-600">Pro</span></h1>
           </div>
           <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-xl bg-white dark:bg-slate-900 shadow border border-slate-200 dark:border-slate-800">
@@ -123,10 +126,14 @@ const InventorySystem = () => {
             </div>
 
             <div className={`p-6 rounded-2xl shadow-xl border transition-all ${editingId ? 'bg-amber-50 border-amber-200 dark:bg-amber-900/10 dark:border-amber-800' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800'}`}>
-              <h2 className="font-bold flex items-center gap-2 mb-6">
-                {editingId ? <Edit3 size={18} className="text-amber-500" /> : <Plus size={18} className="text-indigo-600" />}
-                {editingId ? 'Edit Product' : 'Add Product'}
-              </h2>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="font-bold flex items-center gap-2">
+                  {editingId ? <Edit3 size={18} className="text-amber-500" /> : <Plus size={18} className="text-indigo-600" />}
+                  {editingId ? 'Edit Product' : 'Add Product'}
+                </h2>
+                {editingId && <X size={20} className="cursor-pointer text-slate-400" onClick={() => {setEditingId(null); setForm({name:'',price:'',qty:''})}} />}
+              </div>
+              
               <form onSubmit={handleSubmit} className="space-y-4">
                 <input type="text" required placeholder="Name" className="w-full bg-slate-100 dark:bg-slate-800 rounded-xl p-3 outline-none ring-indigo-500 focus:ring-2" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})}/>
                 <div className="grid grid-cols-2 gap-3">
@@ -148,21 +155,22 @@ const InventorySystem = () => {
                 {loading && <Loader2 className="animate-spin text-indigo-500" size={18} />}
               </div>
 
-              {/* Mobile View */}
+              {/* Mobile View - FIXED HERE */}
               <div className="grid grid-cols-1 gap-4 p-4 md:hidden">
                 {items.map(item => (
                   <div key={item.id} className="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
                     <div className="flex justify-between items-start mb-3">
                       <h4 className="font-bold text-lg">{item.name}</h4>
                       <div className="flex gap-2">
-                        <button onClick={() => setEditingId(item.id)} className="p-1 text-slate-400"><Edit3 size={18}/></button>
-                        <button onClick={() => handleDelete(item.id, item.name)} className="p-1 text-red-400"><Trash2 size={18}/></button>
+                        {/* Changed onClick to use startEdit function */}
+                        <button onClick={() => startEdit(item)} className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm text-slate-400"><Edit3 size={18}/></button>
+                        <button onClick={() => handleDelete(item.id, item.name)} className="p-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm text-red-400"><Trash2 size={18}/></button>
                       </div>
                     </div>
                     <div className="flex justify-between text-sm items-center">
                       <div className="text-slate-500 flex flex-col">
-                        <span>Stock: {item.qty}</span>
-                        <span className="text-[10px] flex items-center gap-1 mt-1"><Calendar size={10}/> {formatDate(item.created_at)}</span>
+                        <span className="font-medium text-slate-700 dark:text-slate-300">Stock: {item.qty}</span>
+                        <span className="text-[10px] flex items-center gap-1 mt-1 font-semibold uppercase tracking-wider"><Calendar size={10}/> {formatDate(item.created_at)}</span>
                       </div>
                       <span className="font-bold text-indigo-600 text-lg">${(item.price * item.qty).toLocaleString()}</span>
                     </div>
@@ -170,7 +178,7 @@ const InventorySystem = () => {
                 ))}
               </div>
 
-              {/* Desktop View */}
+              {/* Desktop View - ALSO UPDATED TO USE startEdit */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-left">
                   <thead className="bg-slate-50 dark:bg-slate-800/50 text-slate-500 text-xs font-bold uppercase">
@@ -194,7 +202,7 @@ const InventorySystem = () => {
                         </td>
                         <td className="p-4 text-right font-bold text-indigo-600">${(item.price * item.qty).toLocaleString()}</td>
                         <td className="p-4 text-right space-x-3">
-                          <button onClick={() => { setEditingId(item.id); setForm({name: item.name, price: item.price, qty: item.qty}) }} className="text-slate-300 hover:text-amber-500"><Edit3 size={16} /></button>
+                          <button onClick={() => startEdit(item)} className="text-slate-300 hover:text-amber-500"><Edit3 size={16} /></button>
                           <button onClick={() => handleDelete(item.id, item.name)} className="text-slate-300 hover:text-red-500"><Trash2 size={16} /></button>
                         </td>
                       </tr>
